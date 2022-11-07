@@ -1,50 +1,45 @@
-from flask import render_template
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from flask_appbuilder import ModelView, ModelRestApi
+from flask_appbuilder.views import ModelView
+from flask_appbuilder.widgets import ListBlock, ShowBlockWidget
 
 from . import appbuilder, db
-
-"""
-    Create your Model based REST API::
-
-    class MyModelApi(ModelRestApi):
-        datamodel = SQLAInterface(MyModel)
-
-    appbuilder.add_api(MyModelApi)
+from .models import Product, ProductType
 
 
-    Create your Views::
+class ProductPubView(ModelView):
+    datamodel = SQLAInterface(Product)
+    base_permissions = ["can_list", "can_show"]
+    list_widget = ListBlock
+    show_widget = ShowBlockWidget
+
+    label_columns = {"photo_img": "Photo"}
+
+    list_columns = ["name", "photo_img", "price_label"]
+    search_columns = ["name", "price", "product_type"]
+
+    show_fieldsets = [
+        ("Summary", {"fields": ["name", "price_label", "photo_img", "product_type"]}),
+        ("Description", {"fields": ["description"], "expanded": True}),
+    ]
 
 
-    class MyModelView(ModelView):
-        datamodel = SQLAInterface(MyModel)
+class ProductView(ModelView):
+    datamodel = SQLAInterface(Product)
 
 
-    Next, register your Views::
-
-
-    appbuilder.add_view(
-        MyModelView,
-        "My View",
-        icon="fa-folder-open-o",
-        category="My Category",
-        category_icon='fa-envelope'
-    )
-"""
-
-"""
-    Application wide 404 error handler
-"""
-
-
-@appbuilder.app.errorhandler(404)
-def page_not_found(e):
-    return (
-        render_template(
-            "404.html", base_template=appbuilder.base_template, appbuilder=appbuilder
-        ),
-        404,
-    )
+class ProductTypeView(ModelView):
+    datamodel = SQLAInterface(ProductType)
+    related_views = [ProductView]
 
 
 db.create_all()
+item = db.insert(Rodic).values(name="test")
+db.Session.commit()
+appbuilder.add_view(ProductPubView, "Our Products", icon="fa-folder-open-o")
+appbuilder.add_view(
+    ProductView, "List Products", icon="fa-folder-open-o", category="Management"
+)
+appbuilder.add_separator("Management")
+appbuilder.add_view(
+    ProductTypeView, "List Product Types", icon="fa-envelope", category="Management"
+)
