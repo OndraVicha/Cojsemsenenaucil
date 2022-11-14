@@ -3,8 +3,8 @@ from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
 from flask_appbuilder.models.mixins import ImageColumn
 from flask_appbuilder.security.sqla.models import User
-from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text, insert
-from sqlalchemy.orm import relationship,backref
+from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import relationship
 
 
 class ProductType(Model):
@@ -49,18 +49,3 @@ class Product(Model):
 class Client(User):
     __tablename__ = "ab_user"
     extra = Column(String(50), unique=True, nullable=False)
-
-class Rodic(Model):
-     id = Column(Integer,primary_key=True)
-     name = Column(String(50),unique=True,nullable=False)
-     items = relationship("Dite", backred="dite", cascade="all.delete")
-
-     def __repr__(self):
-         return self.name
-
-class Dite(Model):
-    id = Column(Integer,primary_key=True)
-    name = Column(String(50),unique=True,nullable=False)
-    photo = Column(ImageColumn)
-    description = Column(Text())
-    rodic_type_id = Column(Integer,ForeignKey("rodic.id"), ondelete="CASCADE")

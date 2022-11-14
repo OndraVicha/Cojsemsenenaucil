@@ -33,8 +33,6 @@ class ProductTypeView(ModelView):
 
 
 db.create_all()
-item = db.insert(Rodic).values(name="test")
-db.Session.commit()
 appbuilder.add_view(ProductPubView, "Our Products", icon="fa-folder-open-o")
 appbuilder.add_view(
     ProductView, "List Products", icon="fa-folder-open-o", category="Management"
