@@ -18,11 +18,11 @@ class ProductType(Model):
 class Product(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True, nullable=False)
-    price = Column(Float, nullable=False)
-    photo = Column(ImageColumn)
-    description = Column(Text())
-    product_type_id = Column(Integer, ForeignKey("product_type.id"), nullable=False)
-    product_type = relationship("ProductType")
+    rok = Column(Float, nullable=False)
+    # #photo = Column(ImageColumn)
+    # #description = Column(Text())
+    # product_type_id = Column(Integer, ForeignKey("product_type.id"), nullable=False)
+    # product_type = relationship("ProductType")
 
     def photo_img(self):
         im = ImageManager()
@@ -39,8 +39,8 @@ class Product(Model):
                 f'alt="Photo" class="img-responsive">' '</a>'
             )
 
-    def price_label(self):
-        return Markup("Price:<strong> {} </strong>".format(self.price))
+    def rok_label(self):
+        return Markup("Rok:<strong> {} </strong>".format(self.rok))
 
     def __repr__(self):
         return self.name
@@ -49,3 +49,16 @@ class Product(Model):
 class Client(User):
     __tablename__ = "ab_user"
     extra = Column(String(50), unique=True, nullable=False)
+
+class Rodic(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), unique=True, nullable=False)
+    description = Column(Text())
+
+class Dyte(Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), unique=True, nullable=False)
+    description = Column(Text())
+    rodic_id = Column(String(50), ForeignKey("rodic.name"), nullable=False)
+    rodic = relationship("Rodic")
+

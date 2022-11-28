@@ -3,7 +3,15 @@ from flask_appbuilder.views import ModelView
 from flask_appbuilder.widgets import ListBlock, ShowBlockWidget
 
 from . import appbuilder, db
-from .models import Product, ProductType
+from .models import Product, ProductType, Rodic, Dyte
+
+class ProductPubRodic(ModelView):
+    datamodel = SQLAInterface(Rodic)
+
+class ProductPubDyte(ModelView):
+    datamodel = SQLAInterface(Dyte)
+    list_widget = ListBlock
+    show_widget = ShowBlockWidget
 
 
 class ProductPubView(ModelView):
@@ -12,14 +20,13 @@ class ProductPubView(ModelView):
     list_widget = ListBlock
     show_widget = ShowBlockWidget
 
-    label_columns = {"photo_img": "Photo"}
 
-    list_columns = ["name", "photo_img", "price_label"]
-    search_columns = ["name", "price", "product_type"]
+
+    list_columns = ["name","rok_label"]
+    search_columns = ["name", "rok"]
 
     show_fieldsets = [
-        ("Summary", {"fields": ["name", "price_label", "photo_img", "product_type"]}),
-        ("Description", {"fields": ["description"], "expanded": True}),
+        ("Summary", {"fields": ["name", "rok_label"]}),
     ]
 
 
@@ -40,4 +47,11 @@ appbuilder.add_view(
 appbuilder.add_separator("Management")
 appbuilder.add_view(
     ProductTypeView, "List Product Types", icon="fa-envelope", category="Management"
+)
+appbuilder.add_separator("Management")
+appbuilder.add_view(
+    ProductPubRodic, "List rodicu", icon="fa-envelope", category="Management"
+)
+appbuilder.add_view(
+    ProductPubDyte, "List dety", icon="fa-envelope", category="Management"
 )
